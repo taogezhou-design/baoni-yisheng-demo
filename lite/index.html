@@ -1,0 +1,169 @@
+﻿<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4ead6">
+<title>保险：保你过怎样的一生 · 精简版</title>
+<style>
+:root{--ink:#2b2622;--muted:#7a6e62;--cream:#f4ead6;--paper:#fbf5e8;--coral:#b8432f;--gold:#c9973f;--jade:#4f7a68;--line:#e2d3b5}
+*{box-sizing:border-box}body{margin:0;background:#e9e5d7;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink)}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--cream);padding:22px 18px 28px}
+.hidden{display:none!important}
+.eyebrow{font-size:11px;letter-spacing:.2em;color:var(--gold);font-weight:800}
+h1{font-size:28px;line-height:1.25;margin:8px 0 10px}h1 em{font-style:normal;color:var(--coral)}
+.lead{font-size:14px;color:var(--muted);line-height:1.65}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 8px 20px #5a3d1a14}
+.card h2{font-size:16px;margin:0 0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:11px 12px;font:700 13px inherit;cursor:pointer}
+.opt.active{border-color:var(--coral);background:#fff1e8}
+.primary{border:0;border-radius:24px;background:var(--coral);color:#fff;font:800 14px inherit;padding:13px 18px;cursor:pointer;width:100%;margin-top:12px}
+.primary:disabled{opacity:.4}
+.ghost{border:0;background:none;color:#85766a;font:600 12px inherit;padding:10px;cursor:pointer;width:100%}
+.links a{font-size:12px;color:var(--coral);margin-right:10px}
+.disclaimer{font-size:10px;line-height:1.65;color:#778078;text-align:center;margin-top:16px}
+.disclaimer small{display:block;margin-top:6px;font-weight:700}
+.score{font-size:42px;font-weight:900;color:var(--coral);text-align:center}
+.score small{font-size:14px;color:#8a7b6a}
+.tier{text-align:center;font-size:16px;font-weight:800;margin:6px 0}
+.gap{padding:8px 0;border-bottom:1px solid #eee8dc;font-size:13px}
+.gap:last-child{border-bottom:0}
+.gap b{display:inline-block;min-width:72px}
+.muted{font-size:12px;color:var(--muted)}
+.modal{position:fixed;inset:0;z-index:40;background:#1a1512b8;display:grid;place-items:center;padding:18px}
+.modal-card{width:min(360px,100%);max-height:92vh;overflow:auto;background:var(--paper);border-radius:20px;padding:20px 16px;position:relative;border:1px solid var(--gold)}
+.modal-close{position:absolute;top:8px;right:12px;border:0;background:none;font-size:24px;cursor:pointer;color:#859188}
+.modal-card h2{text-align:center;font-size:17px}
+.intent-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.sunlite-preview{white-space:pre-wrap;word-break:break-word;background:#fffaf0;border:1px solid #e2d3b5;border-radius:12px;padding:12px;font:12px/1.55 monospace;max-height:220px;overflow:auto}
+.sunlite-note{font-size:11px;color:#85776a;text-align:center;margin-top:10px}
+.ver-foot{text-align:center;font-size:11px;color:#85766a;padding:10px 0}.ver-foot a{color:var(--coral);margin:0 4px}
+.progress{font-size:12px;color:var(--muted);margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<section id="start">
+  <div class="eyebrow">精简版 · 约 1 分钟</div>
+  <h1>保险：保你过<br><em>怎样的一生</em></h1>
+  <p class="lead">六道快问，快速看六类保障的大致方向。想沉浸冒险可走全量版。</p>
+  <p class="links"><a href="../v5/">→ 冒险全量版</a><a href="../">版本首页</a></p>
+  <div class="card">
+    <h2>你现在大约几岁？</h2>
+    <div class="opts" id="ageOpts"></div>
+  </div>
+  <footer class="disclaimer"><p>本工具仅供教育及娱乐用途，结果基于您提供的简化资料及一般假设，并非保险建议、要约或招揽，亦不构成任何产品推荐。实际保障需要因人而异，请向持牌保险中介人进行全面需要分析。香港境外人士投保须亲身在港签署文件。</p><small>由持牌保险代理人提供 · 牌照号码：[待填]</small></footer>
+  <div class="ver-foot">版本 <a href="../lite/">lite</a> · <a href="../v5/">v5</a> · <a href="../v4/">v4</a> · <a href="../v3/">v3</a> · <a href="../v2/">v2</a> · <a href="../v1/">v1</a></div>
+</section>
+
+<section id="quiz" class="hidden">
+  <div class="progress" id="prog">1 / 6</div>
+  <div class="card">
+    <h2 id="qTitle"></h2>
+    <p class="muted" id="qHint"></p>
+    <div class="opts" id="qOpts"></div>
+    <button class="primary" id="qNext" disabled>下一题</button>
+  </div>
+</section>
+
+<section id="results" class="hidden">
+  <div class="eyebrow">精简结果</div>
+  <h1>人生防御指数</h1>
+  <div class="score" id="score">0<small>/100</small></div>
+  <div class="tier" id="tier"></div>
+  <p class="muted" id="intro" style="text-align:center"></p>
+  <div class="card"><h2>六类保障 · 需要 vs 现在</h2><div id="dims"></div></div>
+  <div class="card"><h2>可优先了解</h2><div id="gaps"></div></div>
+  <button class="primary" id="sunliteBtn">报告解读 / 一对一咨询</button>
+  <button class="ghost" id="replayBtn">↻ 再测一次</button>
+  <p class="links" style="text-align:center;margin-top:8px"><a href="../v5/">想更完整？走冒险全量版 →</a></p>
+  <footer class="disclaimer"><p>本工具仅供教育及娱乐用途，结果基于您提供的简化资料及一般假设，并非保险建议、要约或招揽，亦不构成任何产品推荐。实际保障需要因人而异，请向持牌保险中介人进行全面需要分析。香港境外人士投保须亲身在港签署文件。</p><small>由持牌保险代理人提供 · 牌照号码：[待填]</small></footer>
+</section>
+
+<div class="modal hidden" id="sunliteModal">
+  <div class="modal-card">
+    <button class="modal-close" id="sunliteClose">×</button>
+    <div id="sunliteStepIntent">
+      <h2>你最想先了解什么？</h2>
+      <p class="muted" style="text-align:center">可多选，至少选一项</p>
+      <div class="intent-opts" id="intentOpts"></div>
+      <p class="muted" id="intentHint" style="text-align:center">请至少选择一项</p>
+      <button class="primary" id="intentNext" disabled>继续看摘要 →</button>
+    </div>
+    <div id="sunliteStepSummary" class="hidden">
+      <h2>结果摘要预览</h2>
+      <p class="muted" style="text-align:center">对话由 SunLite 处理，持牌代理人的建议另行提供。</p>
+      <pre class="sunlite-preview" id="sunlitePreview"></pre>
+      <button class="primary" id="copySunliteBtn">复制并发给 SunLite</button>
+      <button class="ghost" id="intentBack">← 返回</button>
+      <p class="sunlite-note">仅讨论保障类型方向，不涉及具体公司或产品。不构成投保建议。</p>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+(() => {
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const SUNLITE_CHAT_URL='';
+  const INTENT_OPTS=['结论怎么推出来的','哪块缺口最急','预算怎么排','带病还能怎么投'];
+  const AGES=['18-25','26-35','36-45','46-55','56+'];
+  const state={age:'',answers:{},qi:0,intents:[]};
+  const QUESTIONS=[
+    {key:'family',title:'目前家庭责任？',hint:'单选',opts:['单身少负担','有伴侣','有孩子','要照顾父母']},
+    {key:'income',title:'每月收入大约？',hint:'单选',opts:['HK$2万以下','HK$2–4万','HK$4–8万','HK$8万以上']},
+    {key:'existing',title:'已有哪些保障？',hint:'可多选',multi:true,opts:['公司医疗','个人重疾','个人寿险','暂时没有']},
+    {key:'worry',title:'最担心哪一类？',hint:'单选',opts:['医疗费','大病','家庭责任/贷款','意外','养老','教育/传承']},
+    {key:'retire',title:'希望规划到几岁？',hint:'单选',opts:['80','90','95','100']},
+    {key:'budget',title:'可放在保障规划的预算？',hint:'单选',opts:['先了解方向','约 5%','约 10%','15% 以上']}
+  ];
+  const DIMS=[['medical','医疗/VHIS'],['ci','重疾'],['life','寿险'],['accident','意外'],['annuity','年金'],['education','教育金/传承']];
+  const TIERS=[[85,'🐉','人生防御大师'],[70,'⛰️','山路老手'],[50,'🏯','稳健守护者'],[30,'🛡','见习护盾师'],[0,'🌱','新手村旅人']];
+
+  function computeLite(a){
+    const family=['有伴侣','有孩子','要照顾父母'].includes(a.family);
+    const kids=a.family==='有孩子';
+    const ex=a.existing||[];
+    const current={medical:ex.includes('公司医疗')?55:10,ci:ex.includes('个人重疾')?45:10,life:ex.includes('个人寿险')?45:10,accident:10,annuity:10,education:kids?8:10};
+    const worryBoost=a.worry||'';
+    const targets={medical:worryBoost==='医疗费'?90:80,ci:worryBoost==='大病'?92:70,life:family||worryBoost==='家庭责任/贷款'?88:55,accident:worryBoost==='意外'?80:55,annuity:worryBoost==='养老'?90:Math.min(90,40+(Number(a.retire)||90-60)),education:kids||worryBoost==='教育/传承'?80:20};
+    let wSum=0,got=0; const dims=DIMS.map(([k,label])=>{const need=targets[k],have=current[k],ratio=need>0?Math.min(1,have/need):1;wSum+=need;got+=need*ratio;return {key:k,label,need,have,ratio,gap:Math.max(0,need-have)}});
+    const score=Math.round(wSum?100*got/wSum:0); const tier=TIERS.find(t=>score>=t[0]);
+    return {score,dims,tier:{icon:tier[1],name:tier[2]},gaps:dims.filter(d=>d.ratio<1).sort((x,y)=>y.gap-x.gap),role:family?'家庭守护者':'自由探险家'};
+  }
+
+  function b64url(str){const bytes=new TextEncoder().encode(str);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+  function buildPayload(intents){const D=state.defence;return {v:'lite-1',source:'baoni-yisheng',edition:'lite',age:state.age,role:D.role,score:D.score,tier:`${D.tier.icon}${D.tier.name}`,dims:D.dims.map(d=>({type:d.label,need:d.need,current:d.have,ratio:Math.round(d.ratio*100)})),gaps:D.gaps.slice(0,4).map(g=>({type:g.label,need:g.need,current:g.have,gap:Math.round(g.gap)})),intents:[...intents],note:'仅保障类型，无公司/产品名；教育娱乐用途，非投保建议'}}
+  function formatText(p){const dimLines=p.dims.map(d=>`· ${d.type}：需要 ${d.need} / 现在 ${d.current}（准备度 ${d.ratio}%）`).join('\n');const gapLines=p.gaps.length?p.gaps.map(g=>`· ${g.type}（缺口约 ${g.gap}）`).join('\n'):'· 六项较均衡';return [`【保你过怎样的一生 · 精简摘要】`,`人生阶段：${p.age}`,`角色：${p.role}`,`人生防御指数：${p.score}/100 · ${p.tier}`,'',`六维：`,dimLines,'',`优先缺口：`,gapLines,'',`我想先了解：${p.intents.join('、')}`,'',p.note].join('\n')}
+
+  function paintAge(){$('#ageOpts').innerHTML=AGES.map(a=>`<button class="opt" data-age="${a}">${a}</button>`).join('');$$('#ageOpts .opt').forEach(b=>b.addEventListener('click',()=>{state.age=b.dataset.age;state.answers={};state.qi=0;$('#start').classList.add('hidden');$('#quiz').classList.remove('hidden');paintQ()}))}
+  function paintQ(){const q=QUESTIONS[state.qi];$('#prog').textContent=`${state.qi+1} / ${QUESTIONS.length}`;$('#qTitle').textContent=q.title;$('#qHint').textContent=q.hint||'';
+    const sel=state.answers[q.key]; $('#qOpts').innerHTML=q.opts.map(v=>{const active=q.multi?(sel||[]).includes(v):sel===v;return `<button class="opt ${active?'active':''}" data-v="${v}">${v}</button>`}).join('');
+    $$('#qOpts .opt').forEach(b=>b.addEventListener('click',()=>{if(q.multi){const arr=state.answers[q.key]||[];state.answers[q.key]=arr.includes(b.dataset.v)?arr.filter(x=>x!==b.dataset.v):[...arr,b.dataset.v]} else state.answers[q.key]=b.dataset.v; paintQ()}));
+    const ok=q.multi? (state.answers[q.key]||[]).length>0 : !!state.answers[q.key];
+    $('#qNext').disabled=!ok; $('#qNext').textContent=state.qi===QUESTIONS.length-1?'看结果':'下一题';
+  }
+  function nextQ(){const q=QUESTIONS[state.qi]; if(q.multi&&!(state.answers[q.key]||[]).length)return; if(!q.multi&&!state.answers[q.key])return; if(state.qi<QUESTIONS.length-1){state.qi++;paintQ()} else showResults()}
+  function showResults(){const D=computeLite(state.answers);state.defence=D;$('#quiz').classList.add('hidden');$('#results').classList.remove('hidden');
+    $('#score').innerHTML=`${D.score}<small>/100</small>`;$('#tier').textContent=`${D.tier.icon} ${D.tier.name}`;
+    $('#intro').textContent=`精简路径 · ${state.age} · ${D.role}。数字为简化假设，仅供教育娱乐参考。`;
+    $('#dims').innerHTML=D.dims.map(d=>`<div class="gap"><b>${d.label}</b>需要 ${d.need} / 现在 ${d.have} · 准备度 ${Math.round(d.ratio*100)}%</div>`).join('');
+    $('#gaps').innerHTML=(D.gaps.slice(0,3).map(g=>`<div class="gap"><b>${g.label}</b>缺口约 ${Math.round(g.gap)}</div>`).join('')||'<div class="gap">六项较均衡</div>');
+  }
+  function openSunlite(){state.intents=[];$('#sunliteStepIntent').classList.remove('hidden');$('#sunliteStepSummary').classList.add('hidden');renderIntent();$('#sunliteModal').classList.remove('hidden')}
+  function renderIntent(){$('#intentOpts').innerHTML=INTENT_OPTS.map(v=>`<button class="opt ${(state.intents||[]).includes(v)?'active':''}" data-i="${v}">${v}</button>`).join('');$$('#intentOpts .opt').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.i;const arr=state.intents||[];state.intents=arr.includes(v)?arr.filter(x=>x!==v):[...arr,v];renderIntent()}));const ok=(state.intents||[]).length>0;$('#intentNext').disabled=!ok;$('#intentHint').textContent=ok?`已选 ${state.intents.length} 项`:'请至少选择一项'}
+  function showSummary(){const p=buildPayload(state.intents);const text=formatText(p);state.sunliteText=text;$('#sunlitePreview').textContent=text;const enc=b64url(JSON.stringify(p));try{history.replaceState(null,'',`#sunlite=${enc}`)}catch(e){}state.sunliteHash='#'+'sunlite='+enc;$('#sunliteStepIntent').classList.add('hidden');$('#sunliteStepSummary').classList.remove('hidden')}
+  async function copySL(){const text=state.sunliteText||'';try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()} const enc=(state.sunliteHash||'').replace(/^#sunlite=/,''); if(SUNLITE_CHAT_URL){const join=SUNLITE_CHAT_URL.includes('#')?'&':'#';window.open(enc?`${SUNLITE_CHAT_URL}${join}sunlite=${enc}`:SUNLITE_CHAT_URL,'_blank','noopener')}}
+
+  paintAge();
+  $('#qNext').addEventListener('click',nextQ);
+  $('#sunliteBtn').addEventListener('click',openSunlite);
+  $('#intentNext').addEventListener('click',()=>{if(state.intents.length)showSummary()});
+  $('#intentBack').addEventListener('click',()=>{$('#sunliteStepSummary').classList.add('hidden');$('#sunliteStepIntent').classList.remove('hidden')});
+  $('#copySunliteBtn').addEventListener('click',copySL);
+  $('#sunliteClose').addEventListener('click',()=>$('#sunliteModal').classList.add('hidden'));
+  $('#replayBtn').addEventListener('click',()=>{$('#results').classList.add('hidden');$('#start').classList.remove('hidden');state.answers={};state.qi=0});
+  window.SUNLITE_CHAT_URL=SUNLITE_CHAT_URL;
+})();
+</script>
+</body></html>
