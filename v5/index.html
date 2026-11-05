@@ -1,0 +1,464 @@
+﻿<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a1512">
+<title>保险：保你过怎样的一生 · 冒险版</title>
+<style>
+:root{--ink:#2b2622;--muted:#8a7b6a;--cream:#f4ead6;--paper:#fbf5e8;--jade:#4f7a68;--gold:#c9973f;--coral:#b8432f;--line:#e2d3b5;--shadow:0 12px 28px #00000055}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#1a1512;color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;overflow-x:hidden}
+.app{max-width:430px;margin:0 auto;min-height:100%;position:relative;background:#1a1512}
+.hidden{display:none!important}
+.screen{min-height:100vh;min-height:100dvh}
+
+/* Start */
+.start{padding:28px 20px 24px;background:radial-gradient(120% 80% at 50% 0,#3a2a22,#1a1512 70%);color:#f6e7c4}
+.start .eyebrow{font-size:11px;letter-spacing:.28em;color:var(--gold)}
+.start h1{font-size:32px;line-height:1.25;margin:10px 0;color:#fff3d6}
+.start h1 em{font-style:normal;color:var(--gold)}
+.start p.lead{font-size:14px;line-height:1.7;color:#d4bf94;max-width:320px}
+.age-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.age-btn{border:1.5px solid #c9973f66;background:#2b221c;color:#f6e7c4;border-radius:14px;padding:14px 12px;font:800 15px inherit;text-align:left;cursor:pointer}
+.age-btn span{display:block;font-size:11px;font-weight:500;color:#a89478;margin-top:4px}
+.age-btn:last-child{grid-column:span 2}
+.age-btn:active{border-color:var(--gold);background:#3a2c22}
+.path-links{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 16px}
+.path-links a{font-size:12px;color:var(--gold);text-decoration:none;border:1px solid #c9973f55;padding:8px 12px;border-radius:20px}
+.disclaimer{font-size:10px;line-height:1.65;color:#9a8a78;text-align:center;margin-top:18px}
+.disclaimer small{display:block;margin-top:6px;font-weight:700;color:#c4b090}
+
+/* Battle scene */
+.battle{position:relative;height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+.scene{flex:1;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:0 14px 12px;background:
+  radial-gradient(ellipse at 50% 20%,#4a3428 0%,transparent 55%),
+  linear-gradient(180deg,#2a1e18 0%,#1a1512 45%,#12100e 100%)}
+.scene[data-theme="birth"]{background:radial-gradient(ellipse at 50% 15%,#3d5a4a 0%,transparent 50%),linear-gradient(180deg,#1e2a24,#121512)}
+.scene[data-theme="role"]{background:radial-gradient(ellipse at 50% 15%,#4a3a28 0%,transparent 50%),linear-gradient(180deg,#2a2218,#141210)}
+.scene[data-theme="responsibility"]{background:radial-gradient(ellipse at 70% 10%,#5a3028 0%,transparent 45%),linear-gradient(180deg,#2a1814,#120e0c)}
+.scene[data-theme="vault"]{background:radial-gradient(ellipse at 30% 20%,#5a4a20 0%,transparent 50%),linear-gradient(180deg,#2a2414,#12100c)}
+.scene[data-theme="retire"]{background:radial-gradient(ellipse at 50% 0%,#3a4a5a 0%,transparent 50%),linear-gradient(180deg,#1a222a,#0e1014)}
+.scene[data-theme="bestiary"],.scene[data-theme="health"]{background:radial-gradient(ellipse at 50% 10%,#5a2030 0%,transparent 50%),linear-gradient(180deg,#2a1218,#120a0e)}
+.scene[data-theme="legacy"]{background:radial-gradient(ellipse at 50% 10%,#4a3850 0%,transparent 50%),linear-gradient(180deg,#221828,#100e14)}
+.hud{position:absolute;top:0;left:0;right:0;padding:12px 14px calc(10px + env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center;z-index:5;background:linear-gradient(#00000088,transparent);color:#f6e7c4;font-size:12px;font-weight:700}
+.hud .bar{width:72px;height:7px;background:#ffffff22;border-radius:8px;overflow:hidden;display:inline-block;vertical-align:middle;margin:0 6px}
+.hud .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--coral));width:0;transition:width .4s}
+.monster-zone{position:absolute;top:12%;left:0;right:0;text-align:center;pointer-events:none;z-index:1}
+.monster{font-size:72px;filter:drop-shadow(0 12px 18px #0008);animation:bob 2.4s ease-in-out infinite;line-height:1}
+.monster-name{display:inline-block;margin-top:8px;padding:6px 14px;border-radius:20px;background:#00000066;color:#f6e7c4;font-size:13px;font-weight:800;border:1px solid #c9973f55}
+.monster-line{font-size:12px;color:#d4bf94;margin-top:8px;opacity:.9}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.encounter{position:relative;z-index:3;background:linear-gradient(180deg,#fbf5e8,#f4ead6);border:2px solid #c9973f88;border-radius:20px 20px 16px 16px;padding:14px 14px 12px;box-shadow:var(--shadow);max-height:58vh;overflow-y:auto;margin-bottom:env(safe-area-inset-bottom)}
+.encounter .tag{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--coral)}
+.encounter h2{font-size:17px;margin:4px 0 6px;line-height:1.35}
+.encounter .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:11px 12px;font:700 13px inherit;color:var(--ink);cursor:pointer;text-align:left;flex:1 1 calc(50% - 8px);min-width:120px}
+.choice.wide{flex:1 1 100%}
+.choice.active{border-color:var(--coral);background:#fff1e8;box-shadow:inset 0 0 0 1px var(--coral)}
+.choice small{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:3px}
+.enc-actions{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:8px}
+.primary{border:0;border-radius:24px;background:var(--coral);color:#fff;font:800 13px inherit;padding:12px 18px;cursor:pointer;box-shadow:0 6px 14px #b8432f44}
+.primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.ghost{border:0;background:none;color:#85766a;font:600 12px inherit;padding:10px;cursor:pointer}
+.toast{position:absolute;z-index:20;top:22%;left:50%;transform:translate(-50%,-8px);opacity:0;pointer-events:none;background:#294e3e;color:#fff;border-radius:24px;padding:11px 16px;font-size:13px;transition:.3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.fx{position:absolute;z-index:15;left:50%;top:28%;transform:translate(-50%,0);font-size:36px;animation:float .9s forwards;pointer-events:none}
+@keyframes float{to{transform:translate(-50%,-70px);opacity:0}}
+
+/* Results */
+.results{background:var(--cream);color:var(--ink);padding:22px 16px 28px}
+.results-hero{text-align:center;padding:6px 4px 14px}
+.results-hero .eyebrow{font-size:11px;letter-spacing:.2em;color:var(--gold);font-weight:800}
+.results-hero h1{font-size:28px;margin:8px 0}
+.tier{margin:12px auto 0;max-width:300px;padding:10px 14px;border-radius:14px;background:#fff6e0;border:1.5px solid #c9973f88}
+.tier b{display:block;font-size:16px;color:var(--coral)}
+.tier span{font-size:12px;color:var(--muted)}
+.score-row{display:flex;align-items:center;gap:10px;margin:14px auto 0;padding:12px 14px;border-radius:16px;background:#e6f0e3;max-width:280px;text-align:left}
+.score-row strong{font-size:22px;color:var(--jade);margin-left:auto}
+.score-row strong span{font-size:11px;color:#8aa091}
+.card{background:linear-gradient(#fffaf0,#fbf3e2);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 12px;box-shadow:0 8px 20px #5a3d1a14}
+.card h2{font-size:15px;margin:0 0 4px}
+.card .muted{font-size:12px;color:var(--muted);margin:0 0 10px}
+#radarChart svg{max-width:260px;width:100%;height:auto;display:block;margin:0 auto}
+.legend{display:flex;gap:14px;justify-content:center;font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.gap{display:grid;grid-template-columns:34px 1fr auto;gap:8px;padding:10px 0;border-bottom:1px solid #eee8dc;align-items:start}
+.gap:last-child{border-bottom:0}
+.gap .ico{width:32px;height:32px;border-radius:10px;background:#f1f3e7;display:grid;place-items:center}
+.gap b{font-size:13px}.gap p{font-size:11px;color:var(--muted);margin:3px 0 0;line-height:1.45}
+.gap .amt{font-size:11px;font-weight:800;color:var(--jade);text-align:right;max-width:90px}
+.actions{display:grid;gap:8px;margin:14px 0 8px}
+.actions .primary{width:100%}
+.secondary{border:1px solid #d5e4d4;border-radius:24px;background:#e9f1e6;color:var(--jade);font:700 13px inherit;padding:12px;cursor:pointer}
+.ver-foot{text-align:center;font-size:11px;color:#85766a;padding:10px 0 4px}
+.ver-foot a{color:var(--coral);margin:0 4px}
+
+/* Modal / sunlite / poster */
+.modal{position:fixed;inset:0;z-index:40;background:#1a1512b8;display:grid;place-items:center;padding:18px}
+.modal-card{width:min(360px,100%);max-height:92vh;overflow:auto;background:var(--paper);border-radius:20px;padding:22px 16px 16px;position:relative;border:1px solid var(--gold);text-align:left}
+.modal-close{position:absolute;top:8px;right:12px;border:0;background:none;font-size:24px;color:#859188;cursor:pointer}
+.modal-card h2{text-align:center;font-size:17px;margin:4px 0 8px}
+.modal-card .muted{text-align:center;font-size:12px;color:var(--muted);margin:0 0 12px}
+.intent-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
+.intent-opt{font-size:13px!important;padding:10px 12px!important;flex:0 1 auto;min-width:0}
+.intent-hint{font-size:12px;color:#9a6f2f;text-align:center;margin:0 0 12px}
+.sunlite-preview{white-space:pre-wrap;word-break:break-word;background:#fffaf0;border:1px solid #e2d3b5;border-radius:12px;padding:12px;font:12px/1.55 ui-monospace,Menlo,Consolas,monospace;max-height:220px;overflow:auto;margin:0 0 12px}
+.sunlite-note{font-size:11px;line-height:1.55;color:#85776a;text-align:center;margin:10px 0 0}
+.poster{position:fixed;left:-9999px;top:0;width:360px;padding:22px 20px 18px;background:linear-gradient(#f8efdc,#f4ead6);border:3px solid #c9973f}
+.poster.hidden{display:block!important;visibility:hidden}
+.pz-top{text-align:center;background:linear-gradient(135deg,#2f2722,#4a3a2e);color:#f6e7c4;border-radius:18px;padding:16px 12px}
+.pz-score{font-size:56px;font-weight:900;color:#f0c35f}.pz-score small{font-size:16px;color:#c8b48a}
+.pz-tier{font-size:18px;font-weight:800}.pz-line{font-size:12px;color:#d4bf94}
+.pz-gaps{background:#fffaf0;border-radius:14px;padding:12px;border:1px solid #e2d3b5;margin-top:10px;font-size:12px}
+.pz-gap{display:grid;grid-template-columns:82px 1fr 38px;gap:8px;align-items:center;margin:6px 0}
+.pz-gap i{height:8px;background:#ecdfc4;border-radius:8px;overflow:hidden;display:block}
+.pz-gap em{display:block;height:100%;background:linear-gradient(90deg,#c9973f,#b8432f)}
+.pz-foot{display:flex;gap:12px;align-items:center;margin-top:12px;font-size:11px;color:#7a6e62}
+.pz-qr{flex:0 0 96px;height:96px;background:#fff;border-radius:8px;overflow:hidden}
+.poster-card img{width:100%;border-radius:10px;min-height:180px;background:#efe2c6}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <section class="screen start" id="start">
+    <div class="eyebrow">冒险关卡 · 全量版</div>
+    <h1>保险：保你过<br><em>怎样的一生</em></h1>
+    <p class="lead">选一个年龄段，踏入山路关卡。每个问题都是一场遭遇战——选对线索，收集护盾。</p>
+    <div class="path-links"><a href="../lite/">想更快？走精简版 →</a><a href="../">版本首页</a></div>
+    <div class="age-grid" id="ageGrid">
+      <button class="age-btn" data-age="18-25">18–25 岁<span>新手村出发</span></button>
+      <button class="age-btn" data-age="26-35">26–35 岁<span>探索可能</span></button>
+      <button class="age-btn" data-age="36-45">36–45 岁<span>责任关卡</span></button>
+      <button class="age-btn" data-age="46-55">46–55 岁<span>稳步向前</span></button>
+      <button class="age-btn" data-age="56+">56 岁以上<span>从容规划</span></button>
+    </div>
+    <footer class="disclaimer"><p>本工具仅供教育及娱乐用途，结果基于您提供的简化资料及一般假设，并非保险建议、要约或招揽，亦不构成任何产品推荐。实际保障需要因人而异，请向持牌保险中介人进行全面需要分析。香港境外人士投保须亲身在港签署文件。</p><small>由持牌保险代理人提供 · 牌照号码：[待填]</small></footer>
+    <div class="ver-foot">版本 <a href="../v5/">v5</a> · <a href="../v4/">v4</a> · <a href="../v3/">v3</a> · <a href="../v2/">v2</a> · <a href="../v1/">v1</a> · <a href="../lite/">lite</a></div>
+  </section>
+
+  <section class="screen battle hidden" id="battle">
+    <div class="scene" id="scene" data-theme="birth">
+      <div class="hud"><span id="hudStage">第 1 关</span><span>完成度 <span class="bar"><i id="hudBar"></i></span><b id="hudPct">0%</b></span><span>🛡 <b id="hudShield">0</b></span></div>
+      <div class="monster-zone"><div class="monster" id="monsterEmoji">🌱</div><div class="monster-name" id="monsterName">旅程起点</div><div class="monster-line" id="monsterLine">山路的第一场遭遇</div></div>
+      <div class="toast" id="toast"></div>
+      <div class="encounter" id="encounter">
+        <div class="tag" id="encTag">遭遇战</div>
+        <h2 id="encTitle">问题</h2>
+        <p class="hint" id="encHint"></p>
+        <div class="choices" id="choices"></div>
+        <div class="enc-actions"><button class="ghost" id="skipHint">观察地形</button><button class="primary" id="nextEnc" disabled>下一场 →</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen results hidden" id="results">
+    <div class="results-hero">
+      <div class="eyebrow">关卡通关记录</div>
+      <h1>你的人生剧本</h1>
+      <p class="muted" id="resultIntro" style="color:#7a6e62;font-size:13px"></p>
+      <div class="tier"><b id="tierResult"></b><span id="tierLine"></span></div>
+      <div class="score-row"><span id="roleEmoji">🛡</span><div><b id="roleResult">—</b><small style="color:#7a6e62;font-size:11px">人生防御指数</small></div><strong id="scoreResult">0<span>/100</span></strong></div>
+    </div>
+    <div class="card"><h2>护盾能力图</h2><p class="muted">现在的准备度 与 可能需要的方向</p><div id="radarChart"></div><div class="legend"><span><i style="background:#c9973f"></i>现在的准备</span><span><i style="background:#b8432f"></i>建议关注方向</span></div></div>
+    <div class="card"><h2>你的护盾清单</h2><p class="muted">你的情况通常需要考虑以下保障类型</p><div id="gapList"></div></div>
+    <div class="actions">
+      <button class="primary" id="sunliteBtn">报告解读 / 一对一咨询</button>
+      <button class="secondary" id="shareBtn">📸 生成分享海报</button>
+      <button class="ghost" id="replayBtn">↻ 再走一次</button>
+    </div>
+    <footer class="disclaimer" style="color:#778078"><p>本工具仅供教育及娱乐用途，结果基于您提供的简化资料及一般假设，并非保险建议、要约或招揽，亦不构成任何产品推荐。实际保障需要因人而异，请向持牌保险中介人进行全面需要分析。香港境外人士投保须亲身在港签署文件。</p><small>由持牌保险代理人提供 · 牌照号码：[待填]</small></footer>
+    <div class="ver-foot">版本 <a href="../v5/">v5</a> · <a href="../lite/">lite</a> · <a href="../">首页</a></div>
+  </section>
+
+  <div class="modal hidden" id="sunliteModal">
+    <div class="modal-card">
+      <button class="modal-close" id="sunliteClose">×</button>
+      <div id="sunliteStepIntent">
+        <div style="text-align:center;font-size:28px">💬</div>
+        <h2>你最想先了解什么？</h2>
+        <p class="muted">可多选，至少选一项；选完后会生成结果摘要发给 SunLite。</p>
+        <div class="intent-opts" id="intentOpts"></div>
+        <p class="intent-hint" id="intentHint">请至少选择一项</p>
+        <button class="primary" id="intentNext" disabled style="width:100%">继续看摘要 →</button>
+      </div>
+      <div id="sunliteStepSummary" class="hidden">
+        <div style="text-align:center;font-size:28px">📋</div>
+        <h2>结果摘要预览</h2>
+        <p class="muted">核对后复制发给 SunLite；对话由 SunLite 处理，持牌代理人的建议另行提供。</p>
+        <pre class="sunlite-preview" id="sunlitePreview"></pre>
+        <button class="primary" id="copySunliteBtn" style="width:100%">复制并发给 SunLite</button>
+        <button class="ghost" id="intentBack" style="width:100%">← 改一下想了解的方向</button>
+        <p class="sunlite-note">仅讨论保障类型方向，不涉及具体公司或产品。本工具仅供教育及娱乐参考，不构成投保建议。</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal hidden" id="posterModal"><div class="modal-card poster-card"><button class="modal-close" id="posterClose">×</button><img id="posterImg" alt="人生防御指数分享海报"><p class="muted" id="posterStatus"></p><button class="primary" id="posterSave" style="width:100%">保存 / 分享海报</button></div></div>
+  <div id="poster" class="poster hidden" aria-hidden="true"></div>
+</div>
+<script>
+/* ROUGH PROTOTYPE ASSUMPTIONS, not actuarial. v5 adventure. */
+(() => {
+  'use strict';
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const LIVE_URL = 'https://taogezhou-design.github.io/baoni-yisheng-demo/v5/';
+  const SUNLITE_CHAT_URL = '';
+  const INTENT_OPTS = ['结论怎么推出来的','哪块缺口最急','预算怎么排','带病还能怎么投'];
+  const state = {age:'', answers:{}, shields:0, step:0, queue:[], intents:[], multiTmp:[]};
+
+  const META = {
+    birth:{title:'出生设定', emoji:'🌱', monster:'旅程起点', line:'风刚起，先认清自己站在哪'},
+    role:{title:'角色山', emoji:'🧭', monster:'身份迷雾', line:'雾里有五张角色卡，选一张最像你的'},
+    responsibility:{title:'责任之山', emoji:'⛰️', monster:'债务史莱姆', line:'史莱姆挡住去路，它吃的是未了的责任'},
+    vault:{title:'金库', emoji:'🪙', monster:'通胀幽灵', line:'幽灵飘过金库，问你护盾预算够不够'},
+    retire:{title:'晚年城堡', emoji:'🏯', monster:'长寿龙', line:'龙守着城堡，问你想规划到几岁'},
+    bestiary:{title:'怪兽图鉴', emoji:'🐲', monster:'病魔骑士', line:'图鉴翻开，点出你最忌惮的关卡'},
+    health:{title:'健康怪兽', emoji:'🩺', monster:'病魔骑士', line:'骑士提枪，先问家族与自身的痕迹'},
+    legacy:{title:'传承与晚年', emoji:'🏮', monster:'长寿龙', line:'山顶风声里，问你想留下什么'}
+  };
+
+  // Each encounter: {stage, key, title, hint, opts:[{v,label,sub?}], multi?, wide?}
+  function buildQueue(age){
+    const q = [];
+    const push = (x) => q.push(x);
+    push({stage:'birth', key:'gender', title:'旅人，你的性别是？（选填）', hint:'这不影响通关，只作记录', opts:['女性','男性','不填写'].map(v=>({v,label:v}))});
+    push({stage:'birth', key:'location', title:'目前主要落脚在哪？', hint:'地图会按居住地微调提示', opts:['香港','内地','其他'].map(v=>({v,label:v}))});
+    push({stage:'birth', key:'smoking', title:'吸烟情况如何？', hint:'健康怪兽会记一笔', opts:['不吸烟','吸烟','已戒烟'].map(v=>({v,label:v}))});
+    if(age==='36-45'||age==='46-55'){
+      push({stage:'birth', key:'role', title:'哪张角色卡最像你？', hint:'选一张，迷雾会散开', wide:true, opts:[
+        {v:'自由探险家',label:'🧭 自由探险家',sub:'想多看世界，保留弹性'},
+        {v:'家庭守护者',label:'🛡 家庭守护者',sub:'希望家人有可靠依靠'},
+        {v:'事业攀登者',label:'🧗 事业攀登者',sub:'目标清晰，持续向上'},
+        {v:'安稳享乐派',label:'🍵 安稳享乐派',sub:'喜欢简单安稳的生活'},
+        {v:'传承大家长',label:'🏮 传承大家长',sub:'想把心意和资源传下去'}
+      ]});
+    }
+    if(age==='18-25'||age==='26-35'){
+      push({stage:'role', key:'role', title:'哪张角色卡最像你？', hint:'选一张，迷雾会散开', wide:true, opts:[
+        {v:'自由探险家',label:'🧭 自由探险家',sub:'想多看世界，保留弹性'},
+        {v:'家庭守护者',label:'🛡 家庭守护者',sub:'希望家人有可靠依靠'},
+        {v:'事业攀登者',label:'🧗 事业攀登者',sub:'目标清晰，持续向上'},
+        {v:'安稳享乐派',label:'🍵 安稳享乐派',sub:'喜欢简单安稳的生活'},
+        {v:'传承大家长',label:'🏮 传承大家长',sub:'想把心意和资源传下去'}
+      ]});
+    }
+    if(age!=='56+'){
+      push({stage:'responsibility', key:'partner', title:'债务史莱姆问：伴侣关系？', hint:'责任之山的第一道门', opts:['单身','有伴侣','已婚','其他伴侣关系'].map(v=>({v,label:v}))});
+      push({stage:'responsibility', key:'kids', title:'子女数？', hint:'教育目标稍后揭晓', opts:['0','1','2','3','4+'].map(v=>({v,label:v}))});
+      push({stage:'responsibility', key:'education', title:'每位孩子的教育目标？', hint:'若无子女可跳过', skipIf:()=>!(Number(state.answers.kids==='4+'?4:state.answers.kids)>0), opts:['本地公立','国际学校','海外大学'].map(v=>({v,label:v}))});
+      push({stage:'responsibility', key:'parents', title:'每月支持父母？', hint:'家庭现金流的另一面', opts:['没有','HK$3,000 以下','HK$3,000–8,000','HK$8,000 以上'].map(v=>({v,label:v}))});
+      push({stage:'responsibility', key:'mortgage', title:'未偿还按揭规模？', hint:'史莱姆最爱啃贷款', opts:['无','少于 HK$100万','HK$100–300万','HK$300–800万','HK$800万以上'].map(v=>({v,label:v}))});
+      push({stage:'vault', key:'income', title:'每月收入大约？', hint:'通胀幽灵在听', opts:['HK$2万以下','HK$2–4万','HK$4–8万','HK$8–15万','HK$15万以上'].map(v=>({v,label:v}))});
+      push({stage:'vault', key:'budget', title:'可用于保障规划的预算比例？', hint:'只作演示排序，不是建议', opts:['5%','10%','15%+'].map(v=>({v,label:v}))});
+      push({stage:'vault', key:'existing', title:'目前已有的保障？（可多选）', hint:'点选后按「下一场」', multi:true, opts:['公司医疗','个人寿险','个人重疾','都不清楚/暂时没有'].map(v=>({v,label:v}))});
+      push({stage:'retire', key:'retireAge', title:'希望退休年龄？', hint:'长寿龙睁开一只眼', opts:['50','55','60','65'].map(v=>({v,label:v+' 岁'}))});
+      push({stage:'retire', key:'spend', title:'退休后每月生活费（HK$）？', hint:'城堡里的日常开销', opts:['15,000','30,000','50,000','80,000'].map(v=>({v,label:'HK$'+v}))});
+      push({stage:'retire', key:'lifespan', title:'希望规划到几岁？', hint:'拖动长寿龙的岁数标尺', opts:['80','90','95','100','105'].map(v=>({v,label:v+' 岁'}))});
+      push({stage:'bestiary', key:'history', title:'家族健康史？（可多选）', hint:'可跳过；点选后下一场', multi:true, opts:['糖尿病','心脏病','癌症','中风','高血压','肾病','精神健康'].map(v=>({v,label:v}))});
+      push({stage:'bestiary', key:'worries', title:'最担心遇到的关卡？（可多选）', hint:'点出你的忌惮', multi:true, opts:['活太久钱不够','贷款未还先走','意外','大病拖垮','医疗费贵','教育金','通胀','传承'].map(v=>({v,label:v}))});
+    } else {
+      push({stage:'health', key:'history', title:'家族健康史？（可多选）', hint:'可跳过', multi:true, opts:['糖尿病','心脏病','癌症','中风','高血压','肾病','精神健康'].map(v=>({v,label:v}))});
+      push({stage:'health', key:'conditions', title:'目前关注的健康情况？（可多选）', hint:'可跳过', multi:true, opts:['血糖','心脏','癌症','血压','肾脏','精神健康','暂时没有'].map(v=>({v,label:v}))});
+      push({stage:'health', key:'worries', title:'最担心遇到的关卡？（可多选）', hint:'点出忌惮', multi:true, opts:['活太久钱不够','贷款未还先走','意外','大病拖垮','医疗费贵','教育金','通胀','传承'].map(v=>({v,label:v}))});
+      push({stage:'legacy', key:'spend', title:'每月生活费（HK$）？', hint:'晚年城堡的日常', opts:['15,000','30,000','50,000','80,000'].map(v=>({v,label:'HK$'+v}))});
+      push({stage:'legacy', key:'lifespan', title:'希望规划到几岁？', hint:'长寿龙的岁数', opts:['80','90','95','100','105'].map(v=>({v,label:v+' 岁'}))});
+      push({stage:'legacy', key:'legacyWish', title:'你想留下什么？', hint:'山顶的心愿', opts:['照顾家人','支持公益','传承心意','还没想好'].map(v=>({v,label:v}))});
+    }
+    return q;
+  }
+
+  const incomeMap={'HK$2万以下':180000,'HK$2–4万':360000,'HK$4–8万':720000,'HK$8–15万':1380000,'HK$15万以上':1800000};
+  const mortgageMap={'无':0,'少于 HK$100万':750000,'HK$100–300万':2000000,'HK$300–800万':5500000,'HK$800万以上':9000000};
+  const supportMap={'没有':0,'HK$3,000 以下':1800,'HK$3,000–8,000':5500,'HK$8,000 以上':9000};
+  const spendMap={'15,000':15000,'30,000':30000,'50,000':50000,'80,000':80000};
+  const educationMap={'本地公立':500000,'国际学校':2000000,'海外大学':1500000};
+  const amount=(n)=>n>=1000000?`HK$${(n/1000000).toFixed(n%1000000?1:0)}百万`:`HK$${Math.round(n/10000)}万`;
+
+  function compute(answers){
+    const a=answers, family=(a.partner&&a.partner!=='单身')||Number(a.kids)>0||(a.parents&&a.parents!=='没有');
+    const income=incomeMap[a.income]||480000;
+    const years=family?15:10, kids=Number(a.kids==='4+'?4:a.kids)||0;
+    const education=kids*(educationMap[a.education]||500000), mortgage=mortgageMap[a.mortgage]||0, parentSupport=(supportMap[a.parents]||0)*12*years;
+    const living=(income*.45)*years, existing=(a.existing||[]).includes('个人寿险')?income*2:0;
+    const lifeGap=Math.max(0,mortgage+education+living+parentSupport-existing);
+    const history=a.history||[], worries=a.worries||[];
+    const ciYears=history.includes('癌症')||history.includes('心脏病')?5:3;
+    const ci=Math.max(500000,income*ciYears);
+    const accident=(worries.includes('意外')||!family)?income*7:income*5;
+    const medical=1200000;
+    const retirementAge=Number(a.retireAge)||60, lifespan=Math.max(Number(a.lifespan)||90,90), monthly=spendMap[a.spend]||30000;
+    const annuity=Math.max(0,monthly*12*(lifespan-retirementAge)-800000);
+    const educationFund=kids*(educationMap[a.education||'本地公立']||500000);
+    const legacy=(a.role==='传承大家长'||worries.includes('传承')||a.legacyWish)?500000:0;
+    const current={medical:(a.existing||[]).includes('公司医疗')?55:10,ci:(a.existing||[]).includes('个人重疾')?45:10,life:(a.existing||[]).includes('个人寿险')?45:10,accident:10,annuity:10,education:kids?8:10};
+    const targets={medical:85,ci:Math.min(95,50+ciYears*7),life:family?88:60,accident:(worries.includes('意外')||!family)?75:55,annuity:Math.min(95,35+Math.max(0,lifespan-retirementAge)*1.5),education:kids?80:18};
+    const items=[
+      {type:'医疗/VHIS',key:'medical',icon:'🩺',amount:amount(medical),why:`医疗费用会影响现金流${a.location==='香港'?'，可先了解医疗/VHIS':''}。`},
+      {type:'重疾',key:'ci',icon:'🛡',amount:`${amount(ci)}–${amount(ci*1.5)}`,why:`重疾保障常按收入的 ${ciYears} 年作粗略估算${history.length?`；你选择了${history.slice(0,2).join('、')}家族健康史`:''}。`},
+      {type:'寿险',key:'life',icon:'🏠',amount:amount(lifeGap),why:`因为${mortgage?`你有${amount(mortgage)}贷款`:'你有家庭责任'}${kids?`和${kids===4?'4个或以上':kids+'个'}孩子`:''}，可评估责任期内的家庭缺口。`},
+      {type:'意外',key:'accident',icon:'🪨',amount:amount(accident),why:`按收入约 ${family?5:7} 年作示例估算${worries.includes('意外')?'，也回应了你对意外的担心':''}。`},
+      {type:'年金',key:'annuity',icon:'🐉',amount:amount(annuity),why:`按每月 HK$${monthly.toLocaleString()}、规划至${lifespan}岁估算，已扣除示意的 MPF 金额。`},
+      ...(kids?[{type:'教育金',key:'education',icon:'🎒',amount:amount(educationFund),why:`你希望为孩子考虑${a.education||'本地公立'}教育目标。`}]:[]),
+      ...(legacy?[{type:'传承安排',key:'education',icon:'🏮',amount:'按个人意愿评估',why:'你表达了传承心愿，可进一步梳理受益安排与家庭意愿。'}]:[])
+    ];
+    const priority=['医疗/VHIS',family?'寿险':'重疾',family?'重疾':'寿险','意外','年金','教育金','传承安排'];
+    items.sort((x,y)=>priority.indexOf(x.type)-priority.indexOf(y.type));
+    return {family,items,current,targets,priority:items.map(x=>x.type),role:a.role||((kids||family)?'家庭守护者':'自由探险家')};
+  }
+
+  const DIMS=[['medical','医疗/VHIS'],['ci','重疾'],['life','寿险'],['accident','意外'],['annuity','年金'],['education','教育金/传承']];
+  const TIERS=[[85,'🐉','人生防御大师','六面护盾大多已就位，记得定期复盘。'],[70,'⛰️','山路老手','底子扎实，再看看还差哪一块拼图。'],[50,'🏯','稳健守护者','主要方向已有准备，可按优先级继续了解。'],[30,'🛡','见习护盾师','已经起步，地图上还有几面护盾可以收集。'],[0,'🌱','新手村旅人','旅程刚开始，先从最在意的一项了解起。']];
+  function defenceIndex(c){let wSum=0,got=0;const dims=DIMS.map(([k,label])=>{const need=c.targets[k]||0,have=c.current[k]||0,ratio=need>0?Math.min(1,have/need):1;wSum+=need;got+=need*ratio;return {key:k,label,need,have,ratio,gap:Math.max(0,need-have)}});const score=Math.round(wSum?100*got/wSum:0);const tier=TIERS.find(t=>score>=t[0]);return {score,dims,tier:{icon:tier[1],name:tier[2],line:tier[3]},gaps:dims.filter(d=>d.ratio<1).sort((a,b)=>b.gap-a.gap)}}
+
+  function b64url(str){const bytes=new TextEncoder().encode(str);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+  function buildSunlitePayload(intents){const D=state.defence,c=state.calc;if(!D||!c)return null;return {v:5,source:'baoni-yisheng',edition:'full',age:state.age,role:c.role,score:D.score,tier:`${D.tier.icon}${D.tier.name}`,dims:D.dims.map(d=>({type:d.label,need:d.need,current:d.have,ratio:Math.round(d.ratio*100)})),gaps:D.gaps.slice(0,4).map(g=>({type:g.label,need:g.need,current:g.have,gap:Math.round(g.gap)})),intents:[...intents],note:'仅保障类型，无公司/产品名；教育娱乐用途，非投保建议'}}
+  function formatSunliteText(p){if(!p)return '';const dimLines=p.dims.map(d=>`· ${d.type}：需要 ${d.need} / 现在 ${d.current}（准备度 ${d.ratio}%）`).join('\n');const gapLines=p.gaps.length?p.gaps.map(g=>`· ${g.type}（缺口约 ${g.gap}）`).join('\n'):'· 六项均已贴近示例参考线';return [`【保你过怎样的一生 · 结果摘要】`,`版本：冒险全量 v5`,`人生阶段：${p.age}`,`角色：${p.role}`,`人生防御指数：${p.score}/100 · ${p.tier}`,'',`六维需要 vs 现在：`,dimLines,'',`优先关注的缺口：`,gapLines,'',`我想先了解：${p.intents.join('、')}`,'',p.note].join('\n')}
+
+  function showToast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1400)}
+  function rewardFx(){const pop=document.createElement('div');pop.className='fx';pop.textContent='✨🛡';$('#scene').append(pop);setTimeout(()=>pop.remove(),900)}
+
+  function currentEnc(){
+    while(state.step < state.queue.length){
+      const e=state.queue[state.step];
+      if(e.skipIf && e.skipIf()){state.step++;continue}
+      return e;
+    }
+    return null;
+  }
+
+  function paintEncounter(){
+    const e=currentEnc();
+    if(!e){return showResults()}
+    const meta=META[e.stage]||META.birth;
+    $('#scene').dataset.theme=e.stage;
+    $('#monsterEmoji').textContent=meta.emoji;
+    $('#monsterName').textContent=meta.monster;
+    $('#monsterLine').textContent=meta.line;
+    $('#hudStage').textContent=`第 ${state.step+1}/${state.queue.length} 场 · ${meta.title}`;
+    const pct=Math.round(state.step/state.queue.length*100);
+    $('#hudBar').style.width=pct+'%';$('#hudPct').textContent=pct+'%';
+    $('#hudShield').textContent=state.shields;
+    $('#encTag').textContent=`遭遇战 · ${meta.monster}`;
+    $('#encTitle').textContent=e.title;
+    $('#encHint').textContent=e.hint||'';
+    const selected = e.multi ? (state.answers[e.key]||[]) : state.answers[e.key];
+    $('#choices').innerHTML=e.opts.map(o=>{
+      const active = e.multi ? (selected||[]).includes(o.v) : selected===o.v;
+      return `<button type="button" class="choice ${e.wide||e.opts.length===1?'wide':''} ${active?'active':''}" data-v="${o.v}">${o.label}${o.sub?`<small>${o.sub}</small>`:''}</button>`;
+    }).join('');
+    $$('#choices .choice').forEach(btn=>btn.addEventListener('click',()=>pickChoice(e, btn.dataset.v)));
+    const next=$('#nextEnc');
+    if(e.multi){
+      next.classList.remove('hidden');
+      next.disabled=!(state.answers[e.key]&&state.answers[e.key].length);
+      next.textContent = state.step>=state.queue.length-1 ? '通关结算 →' : '下一场 →';
+    } else {
+      // auto-advance on single pick; still show button if already picked
+      next.disabled=!state.answers[e.key];
+      next.textContent = state.step>=state.queue.length-1 ? '通关结算 →' : '下一场 →';
+    }
+  }
+
+  function pickChoice(e, v){
+    if(e.multi){
+      const arr=state.answers[e.key]||[];
+      state.answers[e.key]=arr.includes(v)?arr.filter(x=>x!==v):[...arr,v];
+      paintEncounter();
+      return;
+    }
+    state.answers[e.key]=v;
+    // numeric lifespan
+    if(e.key==='lifespan') state.answers.lifespan=Number(v);
+    if(e.key==='retireAge') state.answers.retireAge=String(v).replace(/\D/g,'')||v;
+    paintEncounter();
+    // quick advance for single-select after brief highlight
+    setTimeout(()=>advance(), 280);
+  }
+
+  function advance(){
+    const e=currentEnc();
+    if(!e) return showResults();
+    if(e.multi && !(state.answers[e.key]&&state.answers[e.key].length)){showToast('至少选一项线索');return}
+    if(!e.multi && state.answers[e.key]==null){showToast('先选一个答案');return}
+    state.shields++; rewardFx(); showToast(['护盾 +1！','线索收入背包','怪物退散一寸','叮！新护盾'][state.shields%4]);
+    state.step++;
+    setTimeout(paintEncounter, 380);
+  }
+
+  function renderRadar(calc){
+    const labels=['医疗','重疾','寿险','意外','养老','教育/传承'], keys=['medical','ci','life','accident','annuity','education'],cx=130,cy=120,r=82;
+    const pts=(vals)=>vals.map((v,i)=>{const ang=(-90+i*60)*Math.PI/180,rr=r*v/100;return `${cx+rr*Math.cos(ang)},${cy+rr*Math.sin(ang)}`}).join(' ');
+    let rings='';[25,50,75,100].forEach(v=>{const p=keys.map((_,i)=>{const a=(-90+i*60)*Math.PI/180;return `${cx+r*v/100*Math.cos(a)},${cy+r*v/100*Math.sin(a)}`}).join(' ');rings+=`<polygon points="${p}" fill="none" stroke="#e2d3b5" stroke-width="1"/>`});
+    const a=keys.map(k=>calc.current[k]), b=keys.map(k=>calc.targets[k]);
+    $('#radarChart').innerHTML=`<svg viewBox="0 0 260 250" aria-label="六维护盾雷达图">${rings}${keys.map((_,i)=>{const an=(-90+i*60)*Math.PI/180;return `<line x1="${cx}" y1="${cy}" x2="${cx+r*Math.cos(an)}" y2="${cy+r*Math.sin(an)}" stroke="#e2d3b5"/>`}).join('')}<polygon points="${pts(b)}" fill="#b8432f2e" stroke="#b8432f" stroke-width="2"/><polygon points="${pts(a)}" fill="#c9973f55" stroke="#c9973f" stroke-width="2"/>${labels.map((l,i)=>{const an=(-90+i*60)*Math.PI/180;return `<text x="${cx+(r+19)*Math.cos(an)}" y="${cy+(r+19)*Math.sin(an)+3}" text-anchor="middle" font-size="9" fill="#5a4632" font-weight="700">${l}</text>`}).join('')}</svg>`;
+  }
+
+  function showResults(){
+    const c=compute(state.answers); const D=defenceIndex(c); state.calc=c; state.defence=D;
+    $('#battle').classList.add('hidden'); $('#results').classList.remove('hidden');
+    $('#roleResult').textContent=c.role; $('#scoreResult').innerHTML=`${D.score}<span>/100</span>`;
+    $('#tierResult').textContent=`${D.tier.icon} ${D.tier.name}`; $('#tierLine').textContent=D.tier.line;
+    $('#resultIntro').textContent=`你选择了 ${state.age} 岁冒险，收集到 ${state.shields} 面护盾。以下是简化假设下的参考方向。`;
+    renderRadar(c);
+    $('#gapList').innerHTML=c.items.map(x=>`<div class="gap"><span class="ico">${x.icon}</span><div><b>${x.type}</b><p>${x.why}</p></div><span class="amt">${x.amount}</span></div>`).join('');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function openSunliteFlow(){state.intents=[];$('#sunliteStepIntent').classList.remove('hidden');$('#sunliteStepSummary').classList.add('hidden');renderIntentOpts();$('#sunliteModal').classList.remove('hidden')}
+  function renderIntentOpts(){const box=$('#intentOpts');box.innerHTML=INTENT_OPTS.map(v=>`<button type="button" class="choice intent-opt ${(state.intents||[]).includes(v)?'active':''}" data-intent="${v}" style="flex:1 1 40%">${v}</button>`).join('');$$('.intent-opt',box).forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.intent;const arr=state.intents||[];state.intents=arr.includes(v)?arr.filter(x=>x!==v):[...arr,v];renderIntentOpts()}));const ok=(state.intents||[]).length>0;$('#intentNext').disabled=!ok;$('#intentHint').textContent=ok?`已选 ${state.intents.length} 项`:'请至少选择一项'}
+  function showSunliteSummary(){const p=buildSunlitePayload(state.intents||[]);if(!p)return;state.sunlitePayload=p;const text=formatSunliteText(p);state.sunliteText=text;$('#sunlitePreview').textContent=text;const enc=b64url(JSON.stringify(p));try{history.replaceState(null,'',`#sunlite=${enc}`)}catch(e){}state.sunliteHash=`#sunlite=${enc}`;$('#sunliteStepIntent').classList.add('hidden');$('#sunliteStepSummary').classList.remove('hidden')}
+  async function copyToSunlite(){const text=state.sunliteText||'';const enc=(state.sunliteHash||'').replace(/^#sunlite=/,'');try{await navigator.clipboard.writeText(text);showToast('摘要已复制，可粘贴给 SunLite')}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast('摘要已复制')}
+    if(SUNLITE_CHAT_URL){const base=SUNLITE_CHAT_URL;const join=base.includes('#')?'&':'#';window.open(enc?`${base}${join}sunlite=${enc}`:base,'_blank','noopener')}}
+
+  function makePoster(){
+    const D=state.defence; if(!D)return;
+    const cv=document.createElement('canvas'); cv.width=720; cv.height=1280; const ctx=cv.getContext('2d');
+    ctx.fillStyle='#f4ead6'; ctx.fillRect(0,0,720,1280);
+    ctx.fillStyle='#2f2722'; roundRect(ctx,40,40,640,280,24); ctx.fill();
+    ctx.fillStyle='#d4bf94'; ctx.font='20px sans-serif'; ctx.textAlign='center'; ctx.fillText('保险：保你过怎样的一生',360,90);
+    ctx.fillStyle='#fff3d6'; ctx.font='bold 28px sans-serif'; ctx.fillText('我的人生防御指数',360,140);
+    ctx.fillStyle='#f0c35f'; ctx.font='bold 96px sans-serif'; ctx.fillText(String(D.score),360,250);
+    ctx.fillStyle='#c8b48a'; ctx.font='24px sans-serif'; ctx.fillText('/100',360,290);
+    ctx.fillStyle='#2b2622'; ctx.font='bold 32px sans-serif'; ctx.fillText(`${D.tier.icon} ${D.tier.name}`,360,370);
+    ctx.fillStyle='#7a6e62'; ctx.font='22px sans-serif'; ctx.fillText(D.tier.line,360,410);
+    ctx.fillStyle='#fffaf0'; roundRect(ctx,40,450,640,420,20); ctx.fill();
+    ctx.fillStyle='#2b2622'; ctx.textAlign='left'; ctx.font='bold 24px sans-serif'; ctx.fillText('可以继续了解的保障类型',70,500);
+    const gaps=D.gaps.slice(0,4);
+    gaps.forEach((g,i)=>{const y=560+i*70; ctx.font='22px sans-serif'; ctx.fillStyle='#2b2622'; ctx.fillText(g.label,70,y); ctx.fillStyle='#ecdfc4'; ctx.fillRect(260,y-16,320,14); ctx.fillStyle='#b8432f'; ctx.fillRect(260,y-16,320*g.ratio,14); ctx.fillStyle='#7a6e62'; ctx.fillText(Math.round(g.ratio*100)+'%',600,y)});
+    ctx.fillStyle='#2b2622'; ctx.font='18px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('仅供教育及娱乐用途，并非保险建议。',360,940);
+    ctx.fillText('由持牌保险代理人提供 · 牌照号码：[待填]',360,980);
+    ctx.fillText(LIVE_URL.replace('https://',''),360,1040);
+    const url=cv.toDataURL('image/png'); state.posterUrl=url; state.posterCanvas=cv;
+    $('#posterImg').src=url; $('#posterStatus').textContent='手机上长按图片即可保存或分享';
+    $('#posterModal').classList.remove('hidden'); window.__posterReady=true;
+  }
+  function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+  async function savePoster(){if(!state.posterCanvas)return;const blob=await new Promise(r=>state.posterCanvas.toBlob(r,'image/png'));const file=new File([blob],'人生防御指数.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'我的人生防御指数'});return}catch(e){}}const a=document.createElement('a');a.download=file.name;a.href=state.posterUrl;a.click()}
+
+  function start(age){
+    state.age=age; state.answers={}; state.shields=0; state.step=0; state.queue=buildQueue(age);
+    $('#start').classList.add('hidden'); $('#results').classList.add('hidden'); $('#battle').classList.remove('hidden');
+    paintEncounter();
+  }
+
+  $$('.age-btn').forEach(b=>b.addEventListener('click',()=>start(b.dataset.age)));
+  $('#nextEnc').addEventListener('click',advance);
+  $('#skipHint').addEventListener('click',()=>showToast('慢慢观察，选好再出招'));
+  $('#sunliteBtn').addEventListener('click',openSunliteFlow);
+  $('#intentNext').addEventListener('click',()=>{if((state.intents||[]).length)showSunliteSummary()});
+  $('#intentBack').addEventListener('click',()=>{$('#sunliteStepSummary').classList.add('hidden');$('#sunliteStepIntent').classList.remove('hidden')});
+  $('#copySunliteBtn').addEventListener('click',copyToSunlite);
+  $('#sunliteClose').addEventListener('click',()=>$('#sunliteModal').classList.add('hidden'));
+  $('#sunliteModal').addEventListener('click',e=>{if(e.target.id==='sunliteModal')$('#sunliteModal').classList.add('hidden')});
+  $('#shareBtn').addEventListener('click',makePoster);
+  $('#posterSave').addEventListener('click',savePoster);
+  $('#posterClose').addEventListener('click',()=>$('#posterModal').classList.add('hidden'));
+  $('#replayBtn').addEventListener('click',()=>{$('#results').classList.add('hidden');$('#start').classList.remove('hidden');window.scrollTo(0,0)});
+  window.compute=compute; window.defenceIndex=defenceIndex; window.SUNLITE_CHAT_URL=SUNLITE_CHAT_URL;
+})();
+
+</script>
+</body></html>
